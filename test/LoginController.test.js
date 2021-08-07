@@ -7,7 +7,7 @@ describe('Testing /login POST', () => {
   test('POST to /login should return a status code 200 and should return true or false', async () => {
     const response = await request(app).post('/login').send({
       token: "123213",
-      loginType: "facebook"
+      loginType: "email"
     })
     console.log(response.body)
     expect(response.statusCode).toBe(200)

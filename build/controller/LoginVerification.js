@@ -1,13 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginVerification = void 0;
-var loginResult = false;
 var LoginVerification = /** @class */ (function () {
     function LoginVerification() {
     }
     LoginVerification.prototype.LoginCheck = function (login, token) {
-        loginChecks(token, login);
-        return loginResult;
+        return loginChecks(token, login);
     };
     return LoginVerification;
 }());
@@ -17,8 +15,8 @@ var facebookVerify = /** @class */ (function () {
     }
     facebookVerify.prototype.verifyToken = function (token, loginType) {
         if (loginType === 'facebook') {
-            console.log('the faebook token', token);
-            loginResult = true;
+            console.log('the facebook token', token);
+            return true;
         }
     };
     return facebookVerify;
@@ -29,7 +27,7 @@ var gmailVerify = /** @class */ (function () {
     gmailVerify.prototype.verifyToken = function (token, loginType) {
         if (loginType === 'gmail') {
             console.log('the gmail token', token);
-            loginResult = true;
+            return true;
         }
     };
     return gmailVerify;
@@ -40,15 +38,19 @@ var emailVerify = /** @class */ (function () {
     emailVerify.prototype.verifyToken = function (token, loginType) {
         if (loginType === 'email') {
             console.log('the email token', token);
-            loginResult = true;
+            return true;
         }
     };
     return emailVerify;
 }());
 function loginChecks(token, loginType) {
+    var result = false;
     logins.forEach(function (el) {
-        el.verifyToken(token, loginType);
+        // be careful if the false is thrown by the login verification, ther is no any condition to check it
+        if (el.verifyToken(token, loginType) == true)
+            result = true;
     });
+    return result;
 }
 var logins = [
     new facebookVerify(),

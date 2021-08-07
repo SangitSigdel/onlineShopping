@@ -19,8 +19,7 @@ class LoginController {
   @post('login')
   loginUser(req: Request, res: Response): void {
 
-    let login = false
-    let verification = false
+    let login: boolean | void
 
     for (let type in loginTypes) {
       if (type === req.body.loginType) {
@@ -28,7 +27,7 @@ class LoginController {
         verification = true
       }
     }
-    if (verification) {
+    if (login) {
       res.status(200).send({
         status: 'success',
         login
@@ -37,7 +36,7 @@ class LoginController {
     else {
       res.status(400).send({
         status: 'failed',
-        message: 'please provide valid login type'
+        message: 'please provide valid login type or token'
       })
     }
 

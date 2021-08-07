@@ -1,11 +1,8 @@
 
-
-let loginResult = false
-
 export class LoginVerification {
-  LoginCheck(login: string, token: string): boolean {
-    loginChecks(token, login)
-    return loginResult
+
+  LoginCheck(login: string, token: string): boolean | void {
+    return loginChecks(token, login)
   }
 }
 
@@ -13,8 +10,8 @@ class facebookVerify {
 
   verifyToken(token: string, loginType: string) {
     if (loginType === 'facebook') {
-      console.log('the faebook token', token)
-      loginResult = true
+      console.log('the facebook token', token)
+      return true
     }
   }
 
@@ -26,7 +23,7 @@ class gmailVerify {
   verifyToken(token: string, loginType: string) {
     if (loginType === 'gmail') {
       console.log('the gmail token', token)
-      loginResult = true
+      return true
     }
   }
 
@@ -37,7 +34,7 @@ class emailVerify {
   verifyToken(token: string, loginType: string) {
     if (loginType === 'email') {
       console.log('the email token', token)
-      loginResult = true
+      return true
     }
   }
 
@@ -45,10 +42,12 @@ class emailVerify {
 
 
 function loginChecks(token: string, loginType: string) {
+  let result = false
   logins.forEach(el => {
-    el.verifyToken(token, loginType)
+    // be careful if the false is thrown by the login verification, ther is no any condition to check it
+    if (el.verifyToken(token, loginType) == true) result = true
   });
-
+  return result
 }
 
 

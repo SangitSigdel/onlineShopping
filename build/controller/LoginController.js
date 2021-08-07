@@ -23,15 +23,14 @@ var LoginController = /** @class */ (function () {
     function LoginController() {
     }
     LoginController.prototype.loginUser = function (req, res) {
-        var login = false;
-        var verification = false;
+        var login;
         for (var type in loginTypes) {
             if (type === req.body.loginType) {
                 login = loginVerifier.LoginCheck(type, req.body.token);
                 verification = true;
             }
         }
-        if (verification) {
+        if (login) {
             res.status(200).send({
                 status: 'success',
                 login: login
@@ -40,7 +39,7 @@ var LoginController = /** @class */ (function () {
         else {
             res.status(400).send({
                 status: 'failed',
-                message: 'please provide valid login type'
+                message: 'please provide valid login type or token'
             });
         }
     };
