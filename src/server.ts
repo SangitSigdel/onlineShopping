@@ -1,5 +1,26 @@
 const app = require('./index')
+const dotenv = require('dotenv')
+export const mongoose = require('mongoose')
 
-const server = app.listen(3000, () => {
-  console.log(`Server is running in the port 3000`)
+dotenv.config({ path: './config.env' })
+
+const db_password = process.env.DATABASE_PASSWORD
+
+const DB = process.env.DATABASE?.replace('<password>', db_password!)
+
+mongoose.connect(DB, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: true,
+  useUnifiedTopology: true
+})
+  .then(function con(): void {
+    console.log('database connected successfully')
+  })
+
+
+const PORT = process.env.PORT
+
+const server = app.listen(PORT, () => {
+  console.log(`Server is running in the port ${PORT}`)
 })
