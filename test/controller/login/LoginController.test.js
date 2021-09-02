@@ -1,6 +1,6 @@
 const request = require('supertest')
 
-const app = require('../build/index')
+const app = require('../../../build/index')
 
 
 describe('POST /login', () => {
@@ -8,7 +8,7 @@ describe('POST /login', () => {
   test('should return a status code 200', async () => {
     const data = {
       token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjBmY2MwMTRmMjI5MzRlNDc0ODBkYWYxMDdhMzQwYzIyYmQyNjJiNmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiODQ4Njc5MjU0NzA3LXVydXUzNm1hMW9oNXNyNG1rNzFkdDY4ZDF2Ym5saWJhLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiODQ4Njc5MjU0NzA3LXVydXUzNm1hMW9oNXNyNG1rNzFkdDY4ZDF2Ym5saWJhLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTE3Mzc3MzQ3MTEzMDAwMjE5NTgwIiwiZW1haWwiOiJzYW5naXQuc2lnZGVsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiLTVxUEt5WGJKU2xTYlRQSVZPTnc1QSIsIm5hbWUiOiJTYW5naXQgU2lnZGVsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdndGVqMVItMUNXZjRNaDdDLXNMLUp4c2FWZnhrY1RReHRXTTVkcD1zOTYtYyIsImdpdmVuX25hbWUiOiJTYW5naXQiLCJmYW1pbHlfbmFtZSI6IlNpZ2RlbCIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjI4NTgwNjQyLCJleHAiOjE2Mjg1ODQyNDIsImp0aSI6ImMzZDJjNDY1MzVjNGE1YmNhN2ZiZWQzYmM2OTZmZGI3ZjU3NGE5YmUifQ.IVdNccwzhQpzYFcQQSWO9_B-vaGdCMG3LYZDia0g-hnqyCGleTYyhGdWEIJy8GFuZj5NviiGQvMbEhqV8a7Z_pDuw6v9sbJ7Ol3NyX69FKJ6K4Vx5JOii_Y4xqCO8TPzXLxpPMVc-IgTXVxavXpVg7F6rkC_13NXzfqNlVlfE2JqYuVxjI6Dn599ocCu39nnmD7uXyf2NDp1iAD7OOwJDvqP2qMncRvvgmqBlVjVSHQGAbUFLTdWw5TIbGpCsYeGAyGXfgaD1SkaQjgcjln-0gvZh5Ac0NVtUN5ed2xeK7y5GvhRxKG-79HKTr3ikUnq5KrbTxbiFs71p8pq5lb4Pw',
-      loginType: 'gmail'
+      loginType: 'email'
     }
 
     await request(app).post('/login').send(data).then(function (result) {

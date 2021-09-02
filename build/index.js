@@ -5,7 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var decorators_1 = require("./decorators");
-require("./controller/LoginController");
+require("./controller/Login/LoginController");
+require("./controller/product/productController");
+require("./controller/user/userController");
 var app = express_1.default();
 app.use(express_1.default.json());
 app.use(decorators_1.router);

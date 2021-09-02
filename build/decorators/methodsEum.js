@@ -7,4 +7,5 @@ var methods;
     methods["POST"] = "post";
     methods["PUT"] = "put";
     methods["DEL"] = "delete";
+    methods["PATCH"] = "patch";
 })(methods = exports.methods || (exports.methods = {}));

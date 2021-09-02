@@ -12,3 +12,5 @@ function bindRoutes(method: string) {
 
 export const get = bindRoutes(methods.GET)
 export const post = bindRoutes(methods.POST)
+export const patch = bindRoutes(methods.PATCH)
+export const del = bindRoutes(methods.DEL)

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { LoginVerification } from './LoginVerification'
-import { controller, get, post } from '../decorators'
+import { controller, get, post } from '../../decorators'
 
 
 const loginVerifier = new LoginVerification()
