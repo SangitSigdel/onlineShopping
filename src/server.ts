@@ -11,7 +11,7 @@ const DB = process.env.DATABASE?.replace('<password>', db_password!)
 mongoose.connect(DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
-  useFindAndModify: true,
+  useFindAndModify: false,
   useUnifiedTopology: true
 })
   .then(function con(): void {

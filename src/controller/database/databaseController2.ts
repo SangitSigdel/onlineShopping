@@ -1,7 +1,12 @@
 import {Request,Response} from 'express'
 
-export interface dbqueries {
-    create(data:object):any
+export interface databaseInterface {
+    createData(data:object):any
+    getSingleData(id:string):any
+    getData(queryObject:object):any
+    updateData(id:string,data:object):any
+    deleteData(id:string):any
+    // databaseTable:Object | string
 }
 
 export class databaseAdapter {
@@ -43,10 +48,10 @@ export class databaseAdapter {
     }
 
     
-    async createData(dbInterface:dbqueries,req:Request,res:Response){
+    async createData(dbInterface:databaseInterface,req:Request,res:Response){
         try{
 
-            this.dbResponse=await dbInterface.create(req.body)
+            this.dbResponse=await dbInterface.createData(req.body)
             console.log('the database response is ',this.dbResponse.error)
             this.responseStatus(this.dbResponse,res)
         }
@@ -54,5 +59,49 @@ export class databaseAdapter {
             console.log(err)
         }
     }
+
+    async getData(dbInterface:databaseInterface,req:Request,res:Response){
+
+        try{
+            // Building a query
+            this.dbResponse=await dbInterface.getData(req.query)
+            this.responseStatus(this.dbResponse,res)
+        }
+        catch(err){
+            console.log(err)
+        }
+    } 
+
+    async getSingleData(dbInterface:databaseInterface,req:Request,res:Response){
+        try{
+
+            this.dbResponse=await dbInterface.getSingleData(req.params.id)
+            this.responseStatus(this.dbResponse,res)
+        }
+        catch(err){
+            console.log(err)
+        }
+    } 
     
+    async updateData(dbInterface:databaseInterface,req:Request,res:Response){
+        try{
+
+            this.dbResponse=await dbInterface.updateData(req.params.id,req.body)
+            this.responseStatus(this.dbResponse,res)
+        }
+        catch(err){
+            console.log(err)
+        }
+    } 
+
+    async deleteData(dbInterface:databaseInterface,req:Request,res:Response){
+        try{
+
+            this.dbResponse=await dbInterface.deleteData(req.params.id)
+            this.responseStatus(this.dbResponse,res)
+        }
+        catch(err){
+            console.log(err)
+        }
+    } 
 }

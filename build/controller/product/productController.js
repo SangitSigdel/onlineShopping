@@ -48,16 +48,48 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../../decorators");
 var mongodbController_1 = require("../database/mongodbController");
 var databaseController2_1 = require("../database/databaseController2");
+var productModel_1 = require("../../model/mongoDb/productModel");
 var dbAdapter = new databaseController2_1.databaseAdapter();
-var mongoDb = new mongodbController_1.mongodbController();
+var database = new mongodbController_1.mongodbController(productModel_1.productModel);
 var productController = /** @class */ (function () {
     function productController() {
     }
     productController.prototype.createData = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log('i am here', req.body);
-                dbAdapter.createData(mongoDb, req, res);
+                dbAdapter.createData(database, req, res);
+                return [2 /*return*/];
+            });
+        });
+    };
+    productController.prototype.getData = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                dbAdapter.getData(database, req, res);
+                return [2 /*return*/];
+            });
+        });
+    };
+    productController.prototype.getSingleData = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                dbAdapter.getSingleData(database, req, res);
+                return [2 /*return*/];
+            });
+        });
+    };
+    productController.prototype.updateData = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                dbAdapter.updateData(database, req, res);
+                return [2 /*return*/];
+            });
+        });
+    };
+    productController.prototype.deleteData = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                dbAdapter.deleteData(database, req, res);
                 return [2 /*return*/];
             });
         });
@@ -68,6 +100,30 @@ var productController = /** @class */ (function () {
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", Promise)
     ], productController.prototype, "createData", null);
+    __decorate([
+        decorators_1.get('/'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", Promise)
+    ], productController.prototype, "getData", null);
+    __decorate([
+        decorators_1.get('/:id'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", Promise)
+    ], productController.prototype, "getSingleData", null);
+    __decorate([
+        decorators_1.patch('/:id'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", Promise)
+    ], productController.prototype, "updateData", null);
+    __decorate([
+        decorators_1.del('/:id'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", Promise)
+    ], productController.prototype, "deleteData", null);
     productController = __decorate([
         decorators_1.controller('/product')
     ], productController);

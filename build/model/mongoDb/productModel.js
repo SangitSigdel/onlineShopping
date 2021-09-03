@@ -15,6 +15,11 @@ var productSchema = new mongoose_1.Schema({
         type: Number,
         required: [true, 'A product must have a quantity']
     },
-    description: String
+    description: String,
+    images: [String],
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    }
 });
 exports.productModel = mongoose_1.model('products', productSchema);

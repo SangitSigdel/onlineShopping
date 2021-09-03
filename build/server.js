@@ -11,7 +11,7 @@ var DB = (_a = process.env.DATABASE) === null || _a === void 0 ? void 0 : _a.rep
 exports.mongoose.connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
     useUnifiedTopology: true
 })
     .then(function con() {

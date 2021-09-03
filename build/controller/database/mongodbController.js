@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,24 +48,144 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mongodbController = void 0;
-var productModel_1 = require("../../model/mongoDb/productModel");
 var mongodbController = /** @class */ (function () {
-    function mongodbController() {
+    function mongodbController(model) {
+        this.model = model;
     }
-    mongodbController.prototype.create = function (data) {
+    mongodbController.prototype.createData = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var newData, err_1, errorData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, productModel_1.productModel.create(data)];
+                        return [4 /*yield*/, this.model.create(data)];
                     case 1:
                         newData = _a.sent();
                         return [2 /*return*/, newData];
                     case 2:
                         err_1 = _a.sent();
                         errorData = err_1;
+                        Object.assign(errorData, { error: true });
+                        return [2 /*return*/, errorData];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    mongodbController.prototype.getData = function (reqQuery) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryObj_1, excludeFields, queryStr, query, sortBy, fields, page, limit, skip, numProduct, data, err_2, errorData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        queryObj_1 = __assign({}, reqQuery);
+                        excludeFields = ['page', 'sort', 'limit', 'fields'];
+                        excludeFields.forEach(function (el) { return delete queryObj_1[el]; });
+                        queryStr = JSON.stringify(queryObj_1);
+                        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, function (match) { return "$" + match; });
+                        query = this.model.find(JSON.parse(queryStr));
+                        // Sorting 
+                        if (reqQuery.sort) {
+                            sortBy = reqQuery.sort.split(',').join(' ');
+                            query = query.sort(reqQuery.sort);
+                        }
+                        else {
+                            query = query.sort('-createdAt');
+                        }
+                        // FIELD LIMITING
+                        if (reqQuery.fields) {
+                            fields = reqQuery.fields.split(',').join(' ');
+                            query = query.select(fields);
+                        }
+                        else {
+                            query = query.select('-_v');
+                        }
+                        page = reqQuery.page * 1 || 1;
+                        limit = reqQuery.limit * 1 || 10;
+                        skip = (page - 1) * limit;
+                        query = query.skip(skip).limit(limit);
+                        if (!reqQuery.page) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.model.countDocuments()];
+                    case 1:
+                        numProduct = _a.sent();
+                        if (skip > numProduct)
+                            throw new Error('this page doesnot exist');
+                        _a.label = 2;
+                    case 2: return [4 /*yield*/, query];
+                    case 3:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 4:
+                        err_2 = _a.sent();
+                        errorData = err_2;
+                        Object.assign(errorData, { error: true });
+                        return [2 /*return*/, errorData];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    mongodbController.prototype.getSingleData = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, err_3, errorData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.model.findById(id)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        err_3 = _a.sent();
+                        errorData = err_3;
+                        Object.assign(errorData, { error: true });
+                        return [2 /*return*/, errorData];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    mongodbController.prototype.updateData = function (id, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updatedData, err_4, errorData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.model.findByIdAndUpdate(id, data, {
+                                new: true,
+                                runValidators: true
+                            })];
+                    case 1:
+                        updatedData = _a.sent();
+                        return [2 /*return*/, updatedData];
+                    case 2:
+                        err_4 = _a.sent();
+                        errorData = err_4;
+                        Object.assign(errorData, { error: true });
+                        return [2 /*return*/, errorData];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    mongodbController.prototype.deleteData = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deleteData, err_5, errorData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.model.findByIdAndDelete(id)];
+                    case 1:
+                        deleteData = _a.sent();
+                        return [2 /*return*/, deleteData];
+                    case 2:
+                        err_5 = _a.sent();
+                        errorData = err_5;
                         Object.assign(errorData, { error: true });
                         return [2 /*return*/, errorData];
                     case 3: return [2 /*return*/];
