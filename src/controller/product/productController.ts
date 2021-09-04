@@ -1,4 +1,4 @@
-import {Request,Response} from 'express'
+import { Request,Response} from 'express'
 import {controller,get,post,patch,del} from '../../decorators'
 import {mongodbController} from '../database/mongodbController'
 import {databaseAdapter} from '../database/databaseController2'

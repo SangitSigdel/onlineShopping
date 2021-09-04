@@ -22,51 +22,9 @@ export class mongodbController implements databaseInterface {
 
     async getData(reqQuery:any){
         try{
-            
-            const queryObj= {...reqQuery}
-            const excludeFields = ['page','sort','limit','fields']
-            excludeFields.forEach(el=>delete queryObj[el])
-
-            // Advanced filtering
-
-            let queryStr = JSON.stringify(queryObj)
-            queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,match=> `$${match}`);
-            
-            let query =  this.model.find(JSON.parse(queryStr))
-
-            // Sorting 
-            if(reqQuery.sort){
-                const sortBy= reqQuery.sort.split(',').join(' ');
-                query= query.sort(reqQuery.sort)
-            }
-            else {
-
-                query=query.sort('-createdAt');
-            }
-
-            // FIELD LIMITING
-            if(reqQuery.fields){
-                const fields = reqQuery.fields.split(',').join(' ');
-                query=query.select(fields);
-            }
-            else {
-                query=query.select('-_v')
-            }
-
-            // PAGINATION
-            const page = reqQuery.page *1 || 1;
-            const limit = reqQuery.limit *1 || 10;
-            const skip = (page-1) * limit
-
-            query = query .skip(skip).limit(limit)
-
-            if(reqQuery.page){
-                const numProduct = await this.model.countDocuments();
-                if(skip>numProduct) throw new Error('this page doesnot exist')
-            }
-
-            // EXECUTE QUERY
-            const data = await query
+                       
+            const features = new APIFeatuers(this.model.find(),reqQuery).filter().sort().limit().pagination()
+            const data = await features.query
             
             return data 
         }
@@ -119,6 +77,66 @@ export class mongodbController implements databaseInterface {
             return errorData
         }
     }
-   
+  
+
+}
+
+class APIFeatuers{
+    query:any
+    queryString:any
+    constructor(query:any, queryString:any){
+        this.query=query
+        this.queryString=queryString
+    }
+
+    filter(){
+
+        const queryObj= {...this.queryString}
+            const excludeFields = ['page','sort','limit','fields']
+            excludeFields.forEach(el=>delete queryObj[el])
+
+            // Advanced filtering
+
+            let queryStr = JSON.stringify(queryObj)
+            queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,match=> `$${match}`);
+            
+            this.query =  this.query.find(JSON.parse(queryStr)) 
+            return this
+    }
+
+    sort(){
+        if(this.queryString.sort){
+            const sortBy= this.queryString.sort.split(',').join(' ');
+            this.query= this.query.sort(this.queryString.sort)
+        }
+        else {
+
+            this.query=this.query.sort('-createdAt');
+        } 
+        return this
+    }
+
+    limit(){
+
+        if(this.queryString.fields){
+            const fields = this.queryString.fields.split(',').join(' ');
+            this.query=this.query.select(fields);
+        }
+        else {
+            this.query=this.query.select('-_v')
+        }
+
+        return this        
+    }
+
+    pagination(){
+        const page = this.queryString.page *1 || 1;
+        const limit = this.queryString.limit *1 || 10;
+        const skip = (page-1) * limit
+
+        this.query = this.query .skip(skip).limit(limit)
+
+        return this
+    }
 
 }

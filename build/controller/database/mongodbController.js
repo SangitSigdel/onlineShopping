@@ -75,54 +75,22 @@ var mongodbController = /** @class */ (function () {
     };
     mongodbController.prototype.getData = function (reqQuery) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryObj_1, excludeFields, queryStr, query, sortBy, fields, page, limit, skip, numProduct, data, err_2, errorData;
+            var features, data, err_2, errorData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        queryObj_1 = __assign({}, reqQuery);
-                        excludeFields = ['page', 'sort', 'limit', 'fields'];
-                        excludeFields.forEach(function (el) { return delete queryObj_1[el]; });
-                        queryStr = JSON.stringify(queryObj_1);
-                        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, function (match) { return "$" + match; });
-                        query = this.model.find(JSON.parse(queryStr));
-                        // Sorting 
-                        if (reqQuery.sort) {
-                            sortBy = reqQuery.sort.split(',').join(' ');
-                            query = query.sort(reqQuery.sort);
-                        }
-                        else {
-                            query = query.sort('-createdAt');
-                        }
-                        // FIELD LIMITING
-                        if (reqQuery.fields) {
-                            fields = reqQuery.fields.split(',').join(' ');
-                            query = query.select(fields);
-                        }
-                        else {
-                            query = query.select('-_v');
-                        }
-                        page = reqQuery.page * 1 || 1;
-                        limit = reqQuery.limit * 1 || 10;
-                        skip = (page - 1) * limit;
-                        query = query.skip(skip).limit(limit);
-                        if (!reqQuery.page) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.model.countDocuments()];
+                        _a.trys.push([0, 2, , 3]);
+                        features = new APIFeatuers(this.model.find(), reqQuery).filter().sort().limit().pagination();
+                        return [4 /*yield*/, features.query];
                     case 1:
-                        numProduct = _a.sent();
-                        if (skip > numProduct)
-                            throw new Error('this page doesnot exist');
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, query];
-                    case 3:
                         data = _a.sent();
                         return [2 /*return*/, data];
-                    case 4:
+                    case 2:
                         err_2 = _a.sent();
                         errorData = err_2;
                         Object.assign(errorData, { error: true });
                         return [2 /*return*/, errorData];
-                    case 5: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -196,3 +164,47 @@ var mongodbController = /** @class */ (function () {
     return mongodbController;
 }());
 exports.mongodbController = mongodbController;
+var APIFeatuers = /** @class */ (function () {
+    function APIFeatuers(query, queryString) {
+        this.query = query;
+        this.queryString = queryString;
+    }
+    APIFeatuers.prototype.filter = function () {
+        var queryObj = __assign({}, this.queryString);
+        var excludeFields = ['page', 'sort', 'limit', 'fields'];
+        excludeFields.forEach(function (el) { return delete queryObj[el]; });
+        // Advanced filtering
+        var queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, function (match) { return "$" + match; });
+        this.query = this.query.find(JSON.parse(queryStr));
+        return this;
+    };
+    APIFeatuers.prototype.sort = function () {
+        if (this.queryString.sort) {
+            var sortBy = this.queryString.sort.split(',').join(' ');
+            this.query = this.query.sort(this.queryString.sort);
+        }
+        else {
+            this.query = this.query.sort('-createdAt');
+        }
+        return this;
+    };
+    APIFeatuers.prototype.limit = function () {
+        if (this.queryString.fields) {
+            var fields = this.queryString.fields.split(',').join(' ');
+            this.query = this.query.select(fields);
+        }
+        else {
+            this.query = this.query.select('-_v');
+        }
+        return this;
+    };
+    APIFeatuers.prototype.pagination = function () {
+        var page = this.queryString.page * 1 || 1;
+        var limit = this.queryString.limit * 1 || 10;
+        var skip = (page - 1) * limit;
+        this.query = this.query.skip(skip).limit(limit);
+        return this;
+    };
+    return APIFeatuers;
+}());

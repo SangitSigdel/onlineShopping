@@ -1,4 +1,4 @@
-import {Request,Response} from 'express'
+import {NextFunction, Request,Response} from 'express'
 
 export interface databaseInterface {
     createData(data:object):any
