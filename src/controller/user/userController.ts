@@ -1,27 +1,40 @@
-import {Request,Response} from 'express'
-import { controller, get, post,patch,del } from "../../decorators";
+import { Request,Response} from 'express'
+import {controller,get,post,patch,del, use} from '../../decorators'
+import {mongodbController} from '../database/mongoDb/mongodbController'
+import {databaseAdapter} from '../database/databaseController2'
+import {userModel} from '../../model/mongoDb/userModel'
+import {protect} from '../database/mongoDb/protectMiddlewaer'
 
-@controller('/')
-class usreController {
+const dbAdapter = new databaseAdapter()
+const database = new mongodbController(userModel)
 
-    @get('user')
-    getProduct(req:Request,res:Response):void{
-        res.status(200).send('get user')
+@controller('/user')
+class productController{
+   
+    @post('/signup')
+    async createData(req:Request,res:Response){
+        dbAdapter.createData(database,req,res)
     }
 
-    @post('user')
-    createProduct(req:Request,res:Response):void{
-        res.status(200).send('create user')
+    @get('/all')
+    @use(protect)
+    async getData(req:Request,res:Response){
+        dbAdapter.getData(database,req,res)
+    }
+
+    @get('/login')
+    async getSingleData(req:Request,res:Response){
+        dbAdapter.getSingleData(database,req,res)
     }
     
-    @patch('user')
-    editProduct(req:Request,res:Response):void{
-        res.status(200).send('edit user route')
+    @patch('/:id')
+    async updateData(req:Request,res:Response){
+        dbAdapter.updateData(database,req,res)
     }
 
-    @del('user')
-    delProduct(req:Request,res:Response){
-        res.status(200).send('delete user')
+    @del('/:id')
+    async deleteData(req:Request,res:Response){
+        dbAdapter.deleteData(database,req,res)
     }
 
 }

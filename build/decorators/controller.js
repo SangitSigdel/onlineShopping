@@ -1,4 +1,9 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -13,8 +18,10 @@ function controller(rootRoute) {
             var handler = target.prototype[key];
             var route = Reflect.getMetadata('path', target.prototype, key);
             var method = Reflect.getMetadata('method', target.prototype, key);
+            var middlewares = Reflect.getMetadata('middleware', target.prototype, key) || [];
+            console.log(middlewares);
             if (method) {
-                exports.router[method]("" + rootRoute + route, handler);
+                exports.router[method].apply(exports.router, __spreadArray(__spreadArray(["" + rootRoute + route], middlewares), [handler]));
             }
         }
     };

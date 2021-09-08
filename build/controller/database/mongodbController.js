@@ -46,15 +46,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mongodbController = void 0;
+exports.protect = exports.mongodbController = void 0;
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var userModel_1 = require("../../model/mongoDb/userModel");
+var appError_1 = require("../../utils/appError");
+// const _ = require('lodash')
 var mongodbController = /** @class */ (function () {
     function mongodbController(model) {
         this.model = model;
     }
     mongodbController.prototype.createData = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var newData, err_1, errorData;
+            var newData, signUpData, err_1, errorData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -62,7 +69,14 @@ var mongodbController = /** @class */ (function () {
                         return [4 /*yield*/, this.model.create(data)];
                     case 1:
                         newData = _a.sent();
-                        return [2 /*return*/, newData];
+                        if (this.model === userModel_1.userModel) {
+                            signUpData = new userModelActions(userModel_1.userModel).signUpUser(newData);
+                            return [2 /*return*/, signUpData];
+                        }
+                        else {
+                            return [2 /*return*/, newData];
+                        }
+                        return [3 /*break*/, 3];
                     case 2:
                         err_1 = _a.sent();
                         errorData = err_1;
@@ -95,14 +109,18 @@ var mongodbController = /** @class */ (function () {
             });
         });
     };
-    mongodbController.prototype.getSingleData = function (id) {
+    mongodbController.prototype.getSingleData = function (req) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, err_3, errorData;
+            var signUpData, data, err_3, errorData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.model.findById(id)];
+                        if (this.model === userModel_1.userModel) {
+                            signUpData = new userModelActions(userModel_1.userModel).loginUser(req);
+                            return [2 /*return*/, signUpData];
+                        }
+                        return [4 /*yield*/, this.model.findById(req.params.id)];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data];
@@ -164,6 +182,123 @@ var mongodbController = /** @class */ (function () {
     return mongodbController;
 }());
 exports.mongodbController = mongodbController;
+var userModelActions = /** @class */ (function () {
+    function userModelActions(dbModel) {
+        this.dbModel = dbModel;
+    }
+    userModelActions.prototype.createToken = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var jwt_secrete, token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        jwt_secrete = process.env.JWT_SECRET;
+                        return [4 /*yield*/, jsonwebtoken_1.default.sign({ id: userId }, jwt_secrete, {
+                                expiresIn: process.env.JWT_EXPIRES_IN
+                            })];
+                    case 1:
+                        token = _a.sent();
+                        return [2 /*return*/, token];
+                }
+            });
+        });
+    };
+    userModelActions.prototype.signUpUser = function (newData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var jwt_secrete, token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        jwt_secrete = process.env.JWT_SECRET;
+                        return [4 /*yield*/, this.createToken(newData._id)];
+                    case 1:
+                        token = _a.sent();
+                        Object.assign(newData, { token: token });
+                        console.log(newData);
+                        return [2 /*return*/, newData];
+                }
+            });
+        });
+    };
+    userModelActions.prototype.loginUser = function (req) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, email, password, error, user, correct, error, token, result;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, email = _a.email, password = _a.password;
+                        if (!email || !password) {
+                            error = {
+                                error: true,
+                                response: 'please provide email and password'
+                            };
+                            return [2 /*return*/, error];
+                        }
+                        return [4 /*yield*/, this.dbModel.findOne({ email: email }).select('+password')];
+                    case 1:
+                        user = _b.sent();
+                        return [4 /*yield*/, user.correctPassword(password, user.password)];
+                    case 2:
+                        correct = _b.sent();
+                        console.log('the password is ', correct);
+                        if (!user || !correct) {
+                            error = {
+                                error: true,
+                                response: 'Incorrect email or password'
+                            };
+                            return [2 /*return*/, error];
+                        }
+                        return [4 /*yield*/, this.createToken(user._id)];
+                    case 3:
+                        token = _b.sent();
+                        console.log(token);
+                        result = {
+                            token: token
+                        };
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    return userModelActions;
+}());
+var protect = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, JWT_SECRET, decode, freshUser;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                // Getting token and check if it is there
+                console.log('Hello from middleware 😛');
+                JWT_SECRET = process.env.JWT_SECRET;
+                if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+                    token = req.headers.authorization.split(' ')[1];
+                }
+                if (!token) {
+                    return [2 /*return*/, next(new appError_1.AppError('You are not logged in! Please log in to get access', 401))];
+                }
+                return [4 /*yield*/, (jsonwebtoken_1.default.verify(token, JWT_SECRET))
+                    // Check if user still exists
+                    // BE CAREFUL THE USER MODEL IS DIRECT IMPLEMENTED IN THE CONTROLLER TYPESCRIPT FILE 
+                ];
+            case 1:
+                decode = _a.sent();
+                return [4 /*yield*/, userModel_1.userModel.findById(decode.id)];
+            case 2:
+                freshUser = _a.sent();
+                if (!freshUser) {
+                    return [2 /*return*/, next(new appError_1.AppError('The user belonging to this token no longer exists', 401))];
+                }
+                // Check if user changed password after issuing the token
+                if (freshUser.changedPasswordAfter(decode.iat)) {
+                    return [2 /*return*/, next(new appError_1.AppError('User Recently changed password, Please login in again ', 401))];
+                }
+                req.user = freshUser;
+                next();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.protect = protect;
 var APIFeatuers = /** @class */ (function () {
     function APIFeatuers(query, queryString) {
         this.query = query;

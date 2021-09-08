@@ -46,7 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../../decorators");
-var mongodbController_1 = require("../database/mongodbController");
+var mongodbController_1 = require("../database/mongoDb/mongodbController");
 var databaseController2_1 = require("../database/databaseController2");
 var productModel_1 = require("../../model/mongoDb/productModel");
 var dbAdapter = new databaseController2_1.databaseAdapter();

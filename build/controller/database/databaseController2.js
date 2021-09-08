@@ -124,7 +124,7 @@ var databaseAdapter = /** @class */ (function () {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
                         _a = this;
-                        return [4 /*yield*/, dbInterface.getSingleData(req.params.id)];
+                        return [4 /*yield*/, dbInterface.getSingleData(req)];
                     case 1:
                         _a.dbResponse = _b.sent();
                         this.responseStatus(this.dbResponse, res);

@@ -2,7 +2,7 @@ import {NextFunction, Request,Response} from 'express'
 
 export interface databaseInterface {
     createData(data:object):any
-    getSingleData(id:string):any
+    getSingleData(req:Request):any
     getData(queryObject:object):any
     updateData(id:string,data:object):any
     deleteData(id:string):any
@@ -75,7 +75,7 @@ export class databaseAdapter {
     async getSingleData(dbInterface:databaseInterface,req:Request,res:Response){
         try{
 
-            this.dbResponse=await dbInterface.getSingleData(req.params.id)
+            this.dbResponse=await dbInterface.getSingleData(req)
             this.responseStatus(this.dbResponse,res)
         }
         catch(err){
