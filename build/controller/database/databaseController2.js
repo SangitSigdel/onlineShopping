@@ -40,6 +40,7 @@ exports.databaseAdapter = void 0;
 var databaseAdapter = /** @class */ (function () {
     function databaseAdapter() {
     }
+    // RESPONSE BACK FROM THE SERVER    
     databaseAdapter.prototype.responseStatus = function (dbError, res) {
         if (!dbError.error) {
             this.success(res);

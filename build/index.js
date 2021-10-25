@@ -11,6 +11,13 @@ require("./controller/Login/LoginController");
 require("./controller/product/productController");
 require("./controller/user/userController");
 var app = express_1.default();
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 app.use(express_1.default.json());
 app.use(decorators_1.router);
 // Serving a public file

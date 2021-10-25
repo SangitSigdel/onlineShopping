@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import validator from 'validator'
 
 const userSchema = new Schema ({
+    
     email:{
         type:String,
         required:[true, 'Email is required'],
@@ -15,6 +16,12 @@ const userSchema = new Schema ({
         type:String,
         enum:['google','facebook','email'],
         required:true
+    },
+
+    userType:{
+        type:String,
+        enum:['admin','customer','vendor'],
+        required:[true, 'A user must have a user type']
     },
 
     token:{

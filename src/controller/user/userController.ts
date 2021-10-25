@@ -10,7 +10,7 @@ const database = new mongodbController(userModel)
 
 @controller('/user')
 class productController{
-   
+    
     @post('/signup')
     async createData(req:Request,res:Response){
         dbAdapter.createData(database,req,res)

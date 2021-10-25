@@ -1,7 +1,7 @@
 import {databaseInterface} from '../databaseController2'
 import {Request} from 'express'
 import {userModelActions} from './userModelActions'
-import {userModel} from '../../../model/mongoDb/userModel'
+import { userModel } from '../../../model/mongoDb/userModel'
 import {APIFeatuers} from './apiFeatures'
 
 export class mongodbController implements databaseInterface {

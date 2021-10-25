@@ -5,7 +5,6 @@ import {NextFunction, Response} from 'express'
 
 export const protect =async (req:any,res:Response,next:NextFunction)=>{
     // Getting token and check if it is there
-    console.log('Hello from middleware 😛')
     let token
     let JWT_SECRET:any= process.env.JWT_SECRET
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){

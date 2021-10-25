@@ -1,5 +1,5 @@
 import { Request,Response} from 'express'
-import {controller,get,post,patch,del} from '../../decorators'
+import {controller,get,post,patch,del, use} from '../../decorators'
 import {mongodbController} from '../database/mongoDb/mongodbController'
 import {databaseAdapter} from '../database/databaseController2'
 import {productModel} from '../../model/mongoDb/productModel'

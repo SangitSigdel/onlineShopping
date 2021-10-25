@@ -12,7 +12,8 @@ export interface databaseInterface {
 export class databaseAdapter {
 
     dbResponse:any
-    
+
+    // RESPONSE BACK FROM THE SERVER    
     responseStatus(dbError:any,res:Response){
         if(!dbError.error){
             this.success(res)
