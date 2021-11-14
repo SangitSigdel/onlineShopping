@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.del = exports.patch = exports.post = exports.get = void 0;
 require("reflect-metadata");
 var decorators_1 = require("../decorators");
 function bindRoutes(method) {

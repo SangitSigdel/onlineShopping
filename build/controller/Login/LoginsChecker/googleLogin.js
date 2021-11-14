@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.googleLoginCheck = void 0;
 var google_auth_library_1 = require("google-auth-library");
 function googleLoginCheck(token) {
     var CLIENT_ID = "848679254707-uruu36ma1oh5sr4mk71dt68d1vbnliba.apps.googleusercontent.com";

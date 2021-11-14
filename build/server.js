@@ -1,7 +1,6 @@
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mongoose = void 0;
 var app = require("./index");
 var dotenv = require("dotenv");
 exports.mongoose = require("mongoose");
@@ -18,7 +17,7 @@ exports.mongoose
     .then(function con() {
     console.log("database connected successfully");
 })
-    .catch(function (error) { return console.log(error.message); });
+    .catch(function (e) { return console.log(e.message); });
 var PORT = process.env.PORT;
 var server = app.listen(PORT, function () {
     console.log("Server is running in the port " + PORT);

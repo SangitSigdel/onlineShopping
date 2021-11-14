@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginVerification = void 0;
 var LoginsChecker_1 = require("./LoginsChecker");
 var LoginVerification = /** @class */ (function () {
     function LoginVerification() {

@@ -1,14 +1,15 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.controller = exports.router = void 0;
 var express_1 = __importDefault(require("express"));
 require("reflect-metadata");
 exports.router = express_1.default.Router();
@@ -21,7 +22,7 @@ function controller(rootRoute) {
             var middlewares = Reflect.getMetadata('middleware', target.prototype, key) || [];
             console.log(middlewares);
             if (method) {
-                exports.router[method].apply(exports.router, __spreadArray(__spreadArray(["" + rootRoute + route], middlewares), [handler]));
+                exports.router[method].apply(exports.router, __spreadArrays(["" + rootRoute + route], middlewares, [handler]));
             }
         }
     };
